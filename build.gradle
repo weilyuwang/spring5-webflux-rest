@@ -27,8 +27,10 @@ dependencies {
     }
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'junit:junit:4.12'
 }
 
 test {
-    useJUnitPlatform()
+    useJUnit()
+    maxHeapSize = '1G'
 }
