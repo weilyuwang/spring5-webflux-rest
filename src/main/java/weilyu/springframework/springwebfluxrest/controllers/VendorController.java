@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import weilyu.springframework.springwebfluxrest.domain.Category;
 import weilyu.springframework.springwebfluxrest.domain.Vendor;
 import weilyu.springframework.springwebfluxrest.repository.VendorRepository;
 
@@ -36,5 +35,9 @@ public class VendorController {
         return vendorRepository.saveAll(vendorStream).then();
     }
 
-
+    @PutMapping("/api/v1/vendors/{id}")
+    Mono<Vendor> update(@PathVariable String id, @RequestBody Vendor vendor) {
+        vendor.setId(id);
+        return vendorRepository.save(vendor);
+    }
 }
