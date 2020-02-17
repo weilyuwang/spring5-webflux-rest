@@ -4,13 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.reactivestreams.Publisher;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import weilyu.springframework.springwebfluxrest.domain.Category;
 import weilyu.springframework.springwebfluxrest.domain.Vendor;
 import weilyu.springframework.springwebfluxrest.repository.VendorRepository;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class VendorControllerTest {
 
@@ -48,4 +51,20 @@ public class VendorControllerTest {
                 .expectBody(Vendor.class);
 
     }
+
+    @Test
+    public void testCreateVendor() {
+        BDDMockito.given(vendorRepository.saveAll(any(Publisher.class)))
+                .willReturn(Flux.just(Vendor.builder().build()));
+
+        Mono<Vendor> vendorToSaveMono = Mono.just(Vendor.builder().firstName("FirstName").lastName("LastName").build());
+
+        webTestClient.post()
+                .uri("/api/v1/vendors")
+                .body(vendorToSaveMono, Vendor.class)
+                .exchange()
+                .expectStatus()
+                .isCreated();
+    }
+
 }
